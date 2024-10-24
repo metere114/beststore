@@ -31,7 +31,7 @@ public class ProductsControllers {
 
     @GetMapping({"","/"})
     public String showProductList(Model model) {
-        List<Product> products = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        List<Product> products = repo.findAll(Sort.by(Sort.Direction.ASC, "id"));
         model.addAttribute("products", products);
         return "products/index";
     }
@@ -204,6 +204,14 @@ public class ProductsControllers {
         }
 
         return "redirect:/products";
+    }
+
+    @GetMapping("/search")
+    public String searchProducts(@RequestParam("query") String query, Model model) {
+        List<Product> products = repo.findByNameContainingIgnoreCaseOrBrandContainingIgnoreCase(query, query);
+        model.addAttribute("products", products);
+        model.addAttribute("query", query);
+        return "products/index";
     }
 
 }
